@@ -118,6 +118,7 @@
        */
 		  handleDom: function () {
         // 1.获取要操作的元素
+        // 将swiperItem作为插槽插进去，这一步是获取插槽中有多少元素、
         let swiperEl = document.querySelector('.swiper');
         let slidesEls = swiperEl.getElementsByClassName('slide');
 
