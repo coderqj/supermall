@@ -3,16 +3,20 @@
     <NavBar class="homeNav">
       <div slot="center">购物街</div>
     </NavBar>
+    <childCom :banners=banner></childCom>
+
   </div>
 </template>
 
 <script>
 import NavBar from 'components/common/navbar/navBar'
 import {getHomeMultidata} from 'network/home'
+import childCom from './childCom'
 export default {
   name:'home',
   components:{
-    NavBar
+    NavBar,
+    childCom
   },
   data(){
     return{
@@ -26,8 +30,10 @@ export default {
     getHomeMultidata().then(res=>{
       console.log(res);
       this.result = res;
-      this.banner = res.banner.list;
-      this.recommend = res.recommend.list
+      this.banner = res.data.banner.list;
+      this.recommend = res.data.recommend.list
+      console.log('banner',this.banner);
+
     })
   }
 }

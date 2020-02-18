@@ -12,7 +12,7 @@ const routes = [
   },
   {
     path:'/home',
-    component:()=>import('views/home'),
+    component:()=>import('views/home/home'),
     meta:{
       title:'首页'
     }
