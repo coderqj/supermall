@@ -19,7 +19,7 @@ const routes = [
   },
   {
     path:'/list',
-    component:()=>import('views/list'),
+    component:()=>import('views/list/list'),
     meta:{
       title:'分类'
     }

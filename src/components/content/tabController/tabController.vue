@@ -22,7 +22,8 @@ export default {
   },
   methods:{
     btnClick(index){
-      this.currentIndex = index
+      this.currentIndex = index;
+      this.$emit('titleChange',this.currentIndex)
     }
   }
 }
@@ -35,6 +36,7 @@ export default {
   font-size: 15px;
   height: 40px;
   line-height: 40px;
+  background-color: white
 }
 .tabContrItem {
   flex: 1;
