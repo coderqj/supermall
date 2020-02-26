@@ -9,6 +9,13 @@ export function getDetail(iid){
   })
 }
 
+export function getRecommend(){
+  return request({
+    url:'/recommend'
+  })
+}
+
+
 // 构造一个类class
 
 export class Goods{

@@ -1,7 +1,7 @@
 <template>
   <div class="goods-item" @click="imageClick">
     <!-- img中通过@load监听图片是否加载，一旦加载完成触发imageLoad函数 -->
-    <img :src="goodsListItem.show.img" @load="imageLoad">
+    <img :src="showImage" @load="imageLoad">
     <div class="goods-info">
       <p>{{goodsListItem.title}}</p>
       <span class="price">{{goodsListItem.price}}</span>
@@ -18,6 +18,11 @@ export default {
     goodsListItem:{
       type:Object,
       default:()=>{}
+    }
+  },
+  computed:{
+    showImage(){
+      return this.goodsListItem.image ||this.goodsListItem.show.img
     }
   },
   methods:{

@@ -155,7 +155,7 @@ export default {
       this.getHomeGoods(this.currentTitle)
       console.log('---上拉加载更多')
       // 图片加载完后，要手动刷新一下
-      this.$refs.scroll.scroll.refresh()
+      // this.$refs.scroll.scroll.refresh()
     },
     swiperImageLoad(){
       // 3.创建tabControl的offsetTop

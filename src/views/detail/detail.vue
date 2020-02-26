@@ -10,6 +10,8 @@
         <detailShop :shop="shop"></detailShop>
         <detailGoodsInfo :dataInfo="dataInfo" @imageLoad="imageLoad"></detailGoodsInfo>
         <detailParamInfo :goodsParam="goodsParam"></detailParamInfo>
+        <detailComments :comments="comments"></detailComments>
+        <goodsList :goods="recommend"></goodsList>
       </div>
     </scroll>
   </div>
@@ -22,8 +24,10 @@ import detailBaseInfo from 'views/detail/childComps/detailBaseInfo'
 import detailShop from 'views/detail/childComps/detailShop'
 import detailGoodsInfo from 'views/detail/childComps/detailGoodsInfo'
 import detailParamInfo from 'views/detail/childComps/detailParamInfo'
+import detailComments from 'views/detail/childComps/detailComments'
+import goodsList from 'components/content/goods/GoodsList'
 import scroll from 'components/common/scroll/scroll'
-import {getDetail, Goods ,shop , GoodsParam} from 'network/detail'
+import {getDetail, Goods ,shop , GoodsParam, getRecommend} from 'network/detail'
 export default {
   name:"detail",
   components:{
@@ -33,7 +37,9 @@ export default {
     detailShop,
     scroll,
     detailGoodsInfo,
-    detailParamInfo
+    detailParamInfo,
+    detailComments,
+    goodsList
   },
   data(){
     return {
@@ -42,7 +48,9 @@ export default {
       goods:{},
       shop:{},
       dataInfo:{},
-      goodsParam:{}
+      goodsParam:{},
+      comments:{},
+      recommend:[]
     }
   },
   created(){
@@ -63,8 +71,20 @@ export default {
       // 5、获取商品详细信息
       this.dataInfo = data.result.detailInfo
       console.log('this.dataInfo',this.dataInfo)
-          // 6、获取商品参数信息
+      // 6、获取商品参数信息
       this.goodsParam = new GoodsParam(data.result.itemParams.info,data.result.itemParams.rule)
+      //7、评论信息
+      if(data.result.rate.cRate !==0){
+        this.comments =data.result.rate.list[0]
+      }
+    })
+
+    // 请求推荐数据
+    getRecommend().then(res=>{
+      console.log('res.data.list 类型',typeof(res.data.list))
+      this.recommend = res.data.list
+      console.log('this.recommend',this.recommend)
+
     })
   },
   methods:{
