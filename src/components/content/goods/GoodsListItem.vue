@@ -1,6 +1,7 @@
 <template>
-  <div class="goods-item">
-    <img :src="goodsListItem.show.img">
+  <div class="goods-item" @click="imageClick">
+    <!-- img中通过@load监听图片是否加载，一旦加载完成触发imageLoad函数 -->
+    <img :src="goodsListItem.show.img" @load="imageLoad">
     <div class="goods-info">
       <p>{{goodsListItem.title}}</p>
       <span class="price">{{goodsListItem.price}}</span>
@@ -18,8 +19,20 @@ export default {
       type:Object,
       default:()=>{}
     }
+  },
+  methods:{
+    imageLoad(){
+      // 事件发射总线，将监听到的图片加载完成这个事件发射出去
+      this.$bus.$emit('itemImageLoad')
+    },
+    imageClick(){
+      console.log( '跳转到详情页'),
+       this.$router.push('/detail/' + this.goodsListItem.iid)
+    }
   }
 }
+
+// 原生的js监听图片：img.onload=function(){} vue中使用@load
 </script>
 
 <style scoped>

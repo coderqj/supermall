@@ -25,17 +25,23 @@ const routes = [
     }
   },{
     path:'/car',
-    component:()=>import('views/car'),
+    component:()=>import('views/car/car'),
     meta:{
       title:'购物车'
     }
   },{
     path:'/user',
-    component:()=>import('views/user'),
+    component:()=>import('views/user/user'),
     meta:{
       title:'我的'
     }
-  },
+  },{
+    path:'/detail/:iid',
+    component:()=>import('views/detail/detail'),
+    meta:{
+      title:'详情'
+    }
+  }
 ]
 const router = new  vuerouter({
   routes,
