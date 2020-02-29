@@ -36,6 +36,7 @@ import backTop from 'components/content/backTop/BackTop'
 
 import {getHomeMultidata, getHomeGoods} from 'network/home'
 import {debounce} from 'common/util'
+import {itemListenerMixin} from 'common/mixin'
 export default {
   name:'home',
   components:{
@@ -48,6 +49,7 @@ export default {
     scroll,
     backTop
   },
+  mixins:[itemListenerMixin],
   data(){
     return{
       isShowBackTop:false,
@@ -64,7 +66,7 @@ export default {
       tanOffsetTop: 0,
       isTabFixed: false,
       isTabShow:false,
-      saveY:0
+      saveY:0,
     }
   },
   // 该路由处于活跃的时候  
@@ -75,6 +77,8 @@ export default {
   // 该路由处于失活的时候(即当跳转出该路由的时候)
   deactivated(){
     this.saveY = this.$refs.scroll.getScrollY()
+    // 取消全局事件的监听，也就是说当这个路由失活的取消事件监听
+    this.$bus.$off('itemImageLoad',this.itemImageListener)
 
   },
   // 组件一旦创建成功立马发送网络请求
@@ -95,11 +99,12 @@ export default {
     // })
     // 对于refre刷新频繁，需要用到防抖函数，因为不使用防抖函数的话，上面的refres要执行30次对服务器请求压力过大
       // 通过debounce防抖函数可以将refresh函数传入到debounce中，生成一个新的函数,之后在调用非常频繁的时候，就是用新生成的函数，如果下一次执行来的非常快就会取消钓上一次
-      const refresh = debounce(this.$refs.scroll.refresh,500)
-      this.$bus.$on('itemImageLoad',()=>{
-        refresh()
-    // })
-      })
+      // const refresh = debounce(this.$refs.scroll.refresh,500)
+      // this.itemImageListener = ()=>{
+      //   refresh()
+      // }
+      // this.$bus.$on('itemImageLoad',this.itemImageListener)
+      // 以上代码不需要写上，因为在minxin中写了，vue组件只需要混入即可
   },
   methods:{
     getHomeMultidata(){   

@@ -2,16 +2,16 @@
   <!-- <div>详情页{{iid}}</div>-->
   <div id="detail">
     <!-- <h2>11111</h2> -->
-    <detailNavbar class="detaiNavbar"/>
-    <scroll class="content" ref="scroll">
+    <detailNavbar class="detaiNavbar" @titleClick='titleClick' ref="detaiNavbar"/>
+    <scroll class="content" ref="scroll" @scroll="contentScroll" :probe-type="3">
       <div>
         <detailSwipper :topImages = topImages></detailSwipper>
         <detailBaseInfo :goods="goods"></detailBaseInfo>
         <detailShop :shop="shop"></detailShop>
         <detailGoodsInfo :dataInfo="dataInfo" @imageLoad="imageLoad"></detailGoodsInfo>
-        <detailParamInfo :goodsParam="goodsParam"></detailParamInfo>
-        <detailComments :comments="comments"></detailComments>
-        <goodsList :goods="recommend"></goodsList>
+        <detailParamInfo :goodsParam="goodsParam" ref="ParamInfo"></detailParamInfo>
+        <detailComments :comments="comments" ref="Comments"></detailComments>
+        <goodsList :goods="recommend" ref="Recommend"></goodsList>
       </div>
     </scroll>
   </div>
@@ -28,6 +28,9 @@ import detailComments from 'views/detail/childComps/detailComments'
 import goodsList from 'components/content/goods/GoodsList'
 import scroll from 'components/common/scroll/scroll'
 import {getDetail, Goods ,shop , GoodsParam, getRecommend} from 'network/detail'
+import {debounce} from 'common/util'
+import {itemListenerMixin} from 'common/mixin'
+
 export default {
   name:"detail",
   components:{
@@ -50,9 +53,12 @@ export default {
       dataInfo:{},
       goodsParam:{},
       comments:{},
-      recommend:[]
+      recommend:[],
+      imageOffsetTop:[],
+      imageThemeY:null
     }
   },
+  mixins:[itemListenerMixin],
   created(){
     // 1、保存传进来的iid
     this.iid = this.$route.params.iid
@@ -78,19 +84,67 @@ export default {
         this.comments =data.result.rate.list[0]
       }
     })
-
     // 请求推荐数据
     getRecommend().then(res=>{
       console.log('res.data.list 类型',typeof(res.data.list))
       this.recommend = res.data.list
       console.log('this.recommend',this.recommend)
-
-    })
+    }),
+    //定义imageThemeY函数，通过防抖函数减少调用次数
+    this.imageThemeY= debounce(()=>{
+      this.imageOffsetTop.push(0),
+      this.imageOffsetTop.push(this.$refs.ParamInfo.$el.offsetTop)
+      this.imageOffsetTop.push(this.$refs.Comments.$el.offsetTop)
+      this.imageOffsetTop.push(this.$refs.Recommend.$el.offsetTop)
+    },500)
   },
   methods:{
    imageLoad(){
-     this.$refs.scroll.refresh()
-   }
+     this.$refs.scroll.refresh();
+    //  等到图片加载完成后再调用获取各个组件高度的函数
+     this.imageThemeY()
+   },
+   titleClick(value){
+     console.log('11111111111',value)
+     this.$refs.scroll.scrollTo(0,-this.imageOffsetTop[value],300)
+   },
+    contentScroll(position){
+      let value = -position.y
+      console.log('34324234234',value)
+      // if (value < this.imageOffsetTop[1]){
+      //   this.$refs.detaiNavbar.currentIndex = 0
+      // } else if (value >= this.imageOffsetTop[1] && value < this.imageOffsetTop[2]){
+      //   this.$refs.detaiNavbar.currentIndex = 1
+      // }else if (value >= this.imageOffsetTop[2] && value < this.imageOffsetTop[3]){
+      //   this.$refs.detaiNavbar.currentIndex = 2
+      // }else{
+      //   this.$refs.detaiNavbar.currentIndex = 3
+      // }
+      // 上面这种写法不通用
+      let currentIndex = 0;
+      const length = this.imageOffsetTop.length
+      for(let i =0;i<length;i++){
+        if(currentIndex !==i &&((i< length-1 &&  value >= this.imageOffsetTop[i]
+          && value < this.imageOffsetTop[i+1])||(i===length-1 &&value>=this.imageOffsetTop[i])))
+          {
+            currentIndex = i;
+            this.$refs.detaiNavbar.currentIndex = currentIndex
+
+          }
+      }
+  }
+  },
+  mounted(){
+    // const refresh = debounce(this.$refs.scroll.refresh,500)
+    // this.itemImageListener = ()=>{
+    //   refresh()
+    // }
+    // this.$bus.$on('itemImageLoad',this.itemImageListener)
+    // 这里同home.vue中一样处理
+  },
+  // 这里不能使用deactived因为keep-alive将detail排除在外了
+  destroyed(){
+    this.$bus.$off('itemImageLoad',this.itemImageListener)
   }
 }
 </script>
