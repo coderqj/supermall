@@ -5,8 +5,8 @@
           <img src="~assets/img/common/back.svg">
         </div>
         <div slot="center" class="Bar">
-          <div v-for="(item,index) in titles" @click="titleClick(index)"
-          class="BarItem" :class="{active: currentIndex===index}">{{item}}</div>
+          <div v-for="(item,index) in titles" @click="titleClick(index) "
+          class="BarItem" :class="{active: currentIndex===index}" :key=index>{{item}}</div>
         </div>
     </navBar>
   </div>

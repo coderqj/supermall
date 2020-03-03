@@ -10,7 +10,7 @@
       </tr>
     </table>
     <table class="info-param">
-      <tr v-for="(info,index) in goodsParam.infos">
+      <tr v-for="(info,index) in goodsParam.infos" :key="index">
         <!-- <div class="active">tr{{info}}</div> -->
         <td class="info-param-key">{{info.key}}</td>
         <td class="param-value">{{info.value}}</td>

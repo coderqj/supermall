@@ -5,6 +5,7 @@
     <detailNavbar class="detaiNavbar" @titleClick='titleClick' ref="detaiNavbar"/>
     <scroll class="content" ref="scroll" @scroll="contentScroll" :probe-type="3">
       <div>
+        <!-- <ul>><li v-for="(item,index) in $store.state.cartList" :key="index">{{item}}</li></ul> -->
         <detailSwipper :topImages = topImages></detailSwipper>
         <detailBaseInfo :goods="goods"></detailBaseInfo>
         <detailShop :shop="shop"></detailShop>
@@ -14,6 +15,8 @@
         <goodsList :goods="recommend" ref="Recommend"></goodsList>
       </div>
     </scroll>
+    <detailBottom @addCart="addToCart"></detailBottom>
+    <BackTop v-show="isShowBackTop"  @click.native="backTop"/>
   </div>
 </template>
 
@@ -25,11 +28,12 @@ import detailShop from 'views/detail/childComps/detailShop'
 import detailGoodsInfo from 'views/detail/childComps/detailGoodsInfo'
 import detailParamInfo from 'views/detail/childComps/detailParamInfo'
 import detailComments from 'views/detail/childComps/detailComments'
+import detailBottom from 'views/detail/childComps/detailBottom'
 import goodsList from 'components/content/goods/GoodsList'
 import scroll from 'components/common/scroll/scroll'
 import {getDetail, Goods ,shop , GoodsParam, getRecommend} from 'network/detail'
 import {debounce} from 'common/util'
-import {itemListenerMixin} from 'common/mixin'
+import {itemListenerMixin,backTopMixin} from 'common/mixin'
 
 export default {
   name:"detail",
@@ -42,7 +46,8 @@ export default {
     detailGoodsInfo,
     detailParamInfo,
     detailComments,
-    goodsList
+    goodsList,
+    detailBottom
   },
   data(){
     return {
@@ -55,10 +60,10 @@ export default {
       comments:{},
       recommend:[],
       imageOffsetTop:[],
-      imageThemeY:null
+      imageThemeY:null,
     }
   },
-  mixins:[itemListenerMixin],
+  mixins:[itemListenerMixin,backTopMixin],
   created(){
     // 1、保存传进来的iid
     this.iid = this.$route.params.iid
@@ -102,6 +107,9 @@ export default {
    imageLoad(){
      this.$refs.scroll.refresh();
     //  等到图片加载完成后再调用获取各个组件高度的函数
+    // 不能再created中调用，压根获取不到元素
+    // mounted中也不行，数据还没有找到
+    // 获取到数据里面也不行，这个歌时候DOM还没有渲染
      this.imageThemeY()
    },
    titleClick(value){
@@ -131,8 +139,21 @@ export default {
             this.$refs.detaiNavbar.currentIndex = currentIndex
 
           }
-      }
-  }
+      };
+      this.listenBackTop(position)
+   },
+    addToCart(){
+      // 1.获取购物车需要展示的信息
+      const product={};
+      product.image = this.topImages[0];
+      product.title = this.goods.title;
+      product.desc = this.goods.desc;
+      product.price = this.goods.oldPrice.substr(1);
+      product.iid = this.iid;
+      console.log('product.iid',product.iid);
+      // 执行vuex中的mutation中的操作
+      this.$store.dispatch('addCart',product)
+    }
   },
   mounted(){
     // const refresh = debounce(this.$refs.scroll.refresh,500)
@@ -169,5 +190,9 @@ export default {
   bottom: 49px;
   right: 0;
   left: 0
+}
+.backTop{
+  /* position:relative; */
+  z-index: 20;
 }
 </style>

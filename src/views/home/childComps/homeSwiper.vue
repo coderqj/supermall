@@ -1,6 +1,6 @@
 <template>
   <Swiper v-if="banners.length>1">
-    <SwiperItem v-for="item in banners" >
+    <SwiperItem v-for="(item,index) in banners" :key="index" >
       <a :href="item.link">
       <img :src="item.image" @load="swiperImageLoad">
       </a>
