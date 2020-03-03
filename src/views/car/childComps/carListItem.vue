@@ -4,7 +4,7 @@
             <CheckButton @click.native="checkedChange" :isClick="ischecked"></CheckButton>
         </div>
         <div class="item-img">
-            <img :src="itemInfo.image" alt="商品图片"/>
+            <img v-lazy="itemInfo.image" alt="商品图片"/>
         </div>
         <div class="item-info">
             <div class="item-title">{{itemInfo.title}}</div>

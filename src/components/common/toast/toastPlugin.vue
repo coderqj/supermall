@@ -1,0 +1,44 @@
+<template>
+      <div class="toast" v-show="isshow">
+      <div>
+          {{message}} 
+      </div>
+  </div>
+</template>
+
+<script>
+export default {
+    name:'toastPlugin',
+    data(){
+        return{
+            message:'',
+            isshow:false
+        }
+    },
+    methods:{
+        toastShow(message,duration){
+            duration =2000;
+            this.isshow = true;
+            this.message = massage;
+            setTimeout(()=>{
+                this.isshow = false;
+                this.message = ''; 
+            },duration)
+        }
+    }
+}
+</script>
+
+<style scoped>
+.toast{
+    position:fixed;
+    top: 50%;
+    left: 50%;
+    color:#fff;
+    transform: translate(-50%,-50%);
+    padding: 8px 10px;
+    background-color: rgba(0,0,0,.75);
+    z-index: 999
+}
+
+</style>

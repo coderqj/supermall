@@ -7,20 +7,30 @@
       <div class="checkPrice">
         合计：{{totalPrice}} 元
       </div>
-    <div class="checkGo">
+    <div class="checkGo" @click="checkGo">
         去结算({{checkLength}})
     </div>
+    <toast :message="message" :isShow="isShow"/>
   </div>
 </template>
 
 <script>
 import CheckButton from 'components/content/checkButton/checkButton'
+import toast from 'components/common/toast/toast'
+
 // import { mapGetters } from 'vuex'
 
 export default {
     name:'carBottomBar',
+    data(){
+        return{
+            message:'',
+            isShow:false,
+        }
+    },
     components:{
-        CheckButton
+        CheckButton,
+        toast
     },
     computed:{
     //     ...mapGetters({
@@ -55,6 +65,19 @@ export default {
                 this.$store.state.cartList.forEach(item => item.checked = false)
             }else{
                 this.$store.state.cartList.forEach(item => item.checked = true)
+            }
+        },
+        checkGo(){
+            if(!this.isSelectedAll){
+                // console.log('this.$toast.toastShow',this.$toast.toastShow)
+                // console.log('this.$toast',this.$toast)
+                this.message = '请先选择商品，再去结算',
+                this.isShow = true,
+                setTimeout(()=>{
+                this.isShow=false;
+                this.message=''
+                },4000)
+                // this.$toast.toastShow('请先选择购买的商品',3000)
             }
         }
     }

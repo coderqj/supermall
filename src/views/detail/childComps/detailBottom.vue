@@ -28,7 +28,7 @@ export default {
     addCart(){
       console.log('发送购物车');
       this.$emit('addCart');
-      this.$router.push('/car')
+      // this.$router.push('/car')
 
     }
   }

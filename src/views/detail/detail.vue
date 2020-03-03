@@ -17,6 +17,7 @@
     </scroll>
     <detailBottom @addCart="addToCart"></detailBottom>
     <BackTop v-show="isShowBackTop"  @click.native="backTop"/>
+    <toast :message="message" :isShow="isShow"/>
   </div>
 </template>
 
@@ -31,9 +32,11 @@ import detailComments from 'views/detail/childComps/detailComments'
 import detailBottom from 'views/detail/childComps/detailBottom'
 import goodsList from 'components/content/goods/GoodsList'
 import scroll from 'components/common/scroll/scroll'
+import toast from 'components/common/toast/toast'
 import {getDetail, Goods ,shop , GoodsParam, getRecommend} from 'network/detail'
 import {debounce} from 'common/util'
 import {itemListenerMixin,backTopMixin} from 'common/mixin'
+import { mapActions } from 'vuex'
 
 export default {
   name:"detail",
@@ -47,7 +50,8 @@ export default {
     detailParamInfo,
     detailComments,
     goodsList,
-    detailBottom
+    detailBottom,
+    toast
   },
   data(){
     return {
@@ -61,6 +65,8 @@ export default {
       recommend:[],
       imageOffsetTop:[],
       imageThemeY:null,
+      message:'',
+      isShow: false
     }
   },
   mixins:[itemListenerMixin,backTopMixin],
@@ -142,6 +148,10 @@ export default {
       };
       this.listenBackTop(position)
    },
+   ...mapActions({
+    // vue实例中计算属性名:vuex的store对象中的getters属性的方法名
+    addCart:'addCart'
+   }),
     addToCart(){
       // 1.获取购物车需要展示的信息
       const product={};
@@ -151,8 +161,21 @@ export default {
       product.price = this.goods.oldPrice.substr(1);
       product.iid = this.iid;
       console.log('product.iid',product.iid);
-      // 执行vuex中的mutation中的操作
-      this.$store.dispatch('addCart',product)
+      // 执行vuex中的acctionsn中的操作,如果操作成功返回resolve后的then操作
+      // this.$store.dispatch('addCart',product).then(res=>{
+      //   console.log(res)
+      // })
+      this.addCart(product).then(res=>{
+        console.log(res);
+        
+        // this.$toast.toastShow(res,2000)
+        this.message = res,
+        this.isShow = true,
+        setTimeout(()=>{
+          this.isShow=false;
+          this.message=''
+        },4000)
+      })
     }
   },
   mounted(){
