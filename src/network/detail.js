@@ -8,6 +8,8 @@ export function getDetail(iid){
     }
   })
 }
+// 导入的request+方法中的url+params中的范型
+// 然后return回方法中
 
 export function getRecommend(){
   return request({

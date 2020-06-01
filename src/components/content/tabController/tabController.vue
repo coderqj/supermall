@@ -1,6 +1,6 @@
 <template>
   <div class="tabContr"> 
-    <div v-for="(item,index) in title" class="tabContrItem" :class="{active : currentIndex === index}" @click="btnClick(index)">
+    <div v-for="(item,index) in title" class="tabContrItem" :class="{active : currentIndex === index}" @click="btnClick(index)" :key="index">
       <span>{{item}}</span>
     </div>
   </div>
@@ -24,6 +24,7 @@ export default {
     btnClick(index){
       this.currentIndex = index;
       this.$emit('titleChange',this.currentIndex)
+      //点击后，将事件发送出去，发送的是titleeChange
     }
   }
 }
@@ -39,7 +40,7 @@ export default {
   background-color: white
 }
 .tabContrItem {
-  flex: 1;
+  flex: auto;
 }
 .tabContrItem span {
   padding: 5px;

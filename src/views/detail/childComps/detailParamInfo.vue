@@ -47,6 +47,7 @@ export default {
   .param-info table {
     width: 100%;
     border-collapse: collapse;
+    /* 边框会合并为一个单一的边框 */
   }
 
   .param-info table tr {

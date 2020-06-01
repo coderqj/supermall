@@ -2,8 +2,10 @@
   <Swiper v-if="banners.length>1">
     <SwiperItem v-for="(item,index) in banners" :key="index" >
       <a :href="item.link">
-      <img :src="item.image" @load="swiperImageLoad">
+        <img :src="item.image" @load="swiperImageLoad">
+      <!-- 如果图片加载完成后，则子组件发出事件load给当前组件 -->
       </a>
+      <!-- 由于SwiperItem组件中有一个匿名插槽slot，所以a标签里面的内容统一放入这个匿名插槽中 -->
     </SwiperItem>
   </Swiper>
 </template>

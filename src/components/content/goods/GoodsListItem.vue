@@ -1,7 +1,7 @@
 <template>
   <div class="goods-item" @click="imageClick">
     <!-- img中通过@load监听图片是否加载，一旦加载完成触发imageLoad函数 -->
-    <img :src="showImage" @load="imageLoad">
+    <img v-lazy="showImage" @load="imageLoad">
     <div class="goods-info">
       <p>{{goodsListItem.title}}</p>
       <span class="price">{{goodsListItem.price}}</span>
@@ -20,9 +20,24 @@ export default {
       default:()=>{}
     }
   },
+  data(){
+    return{
+      //  imgpath
+    }
+  },
   computed:{
     showImage(){
-      return this.goodsListItem.image ||this.goodsListItem.show.img
+      // console.log('typeof(this.goodsListItem.image)',typeof(this.goodsListItem.image))
+      // console.log('typeof(this.goodsListItem.show.img)',typeof(this.goodsListItem.show.img))
+      // console.log('typeof(this.goodsListItem.img)',typeof(this.goodsListItem.img))
+      // if (typeof(this.goodsListItem.image)!="undefined "){
+      //   return this.goodsListItem.show.image
+      //   } 
+      // else{
+        // return this.goodsListItem.img
+       return this.goodsListItem.img || this.goodsListItem.image || this.goodsListItem.show.img
+
+    // }
     }
   },
   methods:{
@@ -31,8 +46,13 @@ export default {
       this.$bus.$emit('itemImageLoad')
     },
     imageClick(){
-      console.log( '跳转到详情页'),
+      console.log( '跳转到详情页')
+      if(this.goodsListItem.iid==undefined){
+       this.$router.push('/detail/' + this.goodsListItem.item_id)
+      }else{
        this.$router.push('/detail/' + this.goodsListItem.iid)
+       }
+
     }
   }
 }
@@ -45,7 +65,8 @@ export default {
   .goods-item {
     padding-bottom: 40px;
     position: relative;
-    width: 48%
+    width: 48%;
+    /* margin-right: 15px; */
   }
   .goods-item img {
     width: 100%;

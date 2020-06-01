@@ -1,7 +1,8 @@
 <template>
+<!-- 原生js给我们提供了一个很好的方法：Object.keys()，该方法返回一个数组,其中这个数组的内容就是这个对象的所有键值 -->
     <!-- Object.keys(goods).length !== 0 这句话的目的是判断对象名为goods的对象是否为空，是否里面的key都为空 -->
   <div v-if="Object.keys(goods).length !== 0" class="base-info">
-    <div class="info-title">{{goods.title}}</div>
+    <div class="info-title" @click="buttonCLick">{{goods.title}}</div>
     <div class="info-price">
       <span class="n-price">{{goods.newPrice}}</span>
       <span class="o-price">{{goods.oldPrice}}</span>
@@ -15,7 +16,7 @@
     </div>
     <div class="info-service">
       <span class="info-service-item" v-for="index in goods.services.length-1" :key="index">
-        <img :src="goods.services[index-1].icon">
+        <img v-lazy="goods.services[index-1].icon">
         <span>{{goods.services[index-1].name}}</span>
       </span>
     </div>
@@ -29,8 +30,16 @@
 		  goods: {
         type: Object,
         default(){
-
         }
+      }
+    },
+    methods:{
+      buttonCLick(){
+        console.log('obj.goods',Object.keys(this.goods));
+        console.log('goods',this.goods);     
+        console.log('obj.goods.length',Object.keys(this.goods).length);
+
+
       }
     }
 	}

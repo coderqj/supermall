@@ -1,4 +1,6 @@
    // 防抖函数
+  //  函数防抖（debounce），就是指触发事件后，在 n 秒内函数只能执行一次，
+  // 如果触发事件后在 n 秒内又触发了事件，则会重新计算函数延执行时间。
 export function debounce (func, delay){
   let timer = null
   return function(...args){

@@ -12,7 +12,7 @@ const routes = [
   },
   {
     path:'/home',
-    component:()=>import('views/home/home'),
+    component:()=>import('views/home/home'),     //该路径下对应的组件
     meta:{
       title:'首页'
     }
@@ -38,7 +38,7 @@ const routes = [
   },{
     path:'/detail/:iid',
     component:()=>import('views/detail/detail'),
-    meta:{
+    meta:{//这里设定一些自定义字段
       title:'详情'
     }
   }

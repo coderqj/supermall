@@ -12,8 +12,10 @@ export default {
 
 <style>
 #tar-bar{
+  /* 弹性布局 */
   display: flex;
   position: fixed;
+  /* 固定定位，相对于浏览器定位 */
   left: 0;
   right: 0;
   bottom: 0;

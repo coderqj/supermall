@@ -19,15 +19,15 @@
           <div class="goods-text">全部宝贝</div>
         </div>
       </div>
-    <div class="shop-middle-item shop-middle-right">
-      <table>
+      <div class="shop-middle-item shop-middle-right">
+        <table>
           <tr v-for="(item, index) in shop.score" :key="index">
-          <td>{{item.name}}</td>
-          <td class="score" :class="{'score-better':item.isBetter}">{{item.score}}</td>
-          <td class="better" :class="{'better-more':item.isBetter}"><span>{{item.isBetter ? '高':'低'}}</span></td>
-        </tr>
-      </table>
-    </div>
+            <td>{{item.name}}</td>
+            <td class="score" :class="{'score-better':item.isBetter}">{{item.score}}</td>
+            <td class="better" :class="{'better-more':item.isBetter}"><span>{{item.isBetter ? '高':'低'}}</span></td>
+          </tr>
+        </table>
+      </div>
     </div>
   <div class="shop-bottom">
     <div class="enter-shop">进店逛逛</div>
@@ -55,6 +55,7 @@ export default {
 
  <style scoped>
   .shop-info {
+    /* 规定一些整体上的东西 */
     /* 上内边距和下内边距是25px,右内边距和左内边距是8px */
     padding: 50px 8px;
     /* 规定下边框的宽度5px,样式，颜色 */
@@ -68,6 +69,7 @@ export default {
     display: flex;
     /* 元素位于容器的中心 */
     align-items: center;
+    /* height: 100px; */
   }
 
   .shop-top img {

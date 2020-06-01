@@ -1,12 +1,13 @@
 <template>
   <div class="wrapper" ref="wrapper">
     <!-- <div class="content"> -->
+      <!-- 往里面插入的插槽slot是需要滑动的内容 -->
      <slot></slot>
     <!-- </div> -->
   </div>
 </template>
-
 <script>
+// 这是一个控制滑动的组件
 import BScroll from 'better-scroll'
 export default {
   name:'scroll',

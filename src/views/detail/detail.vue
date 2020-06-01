@@ -72,12 +72,15 @@ export default {
   mixins:[itemListenerMixin,backTopMixin],
   created(){
     // 1、保存传进来的iid
+    //        this.$router.push('/detail/' + this.goodsListItem.iid) 因为在goods组件中点击商品进来的时候是传进来了iid的，所以这个时候要将传进来的iid赋值给该组件的iid
     this.iid = this.$route.params.iid
-    // console.log('传进来的参数是',this.$route.params)
+    console.log('传进来的参数是',this.$route.params)
     // 2、根据传进来的iid去请求数据
+    // 前缀http//+/api/hy/detail?this.iid
     getDetail(this.iid).then(res=>{
-      console.log('res',res);
+      console.log('res_id',res);
       const data = res;
+      console.log('data_content',data);
       this.topImages = res.result.itemInfo.topImages;
       // 3、获取商品信息
       this.goods= new Goods (data.result.itemInfo,data.result.columns,data.result.shopInfo.services)
@@ -124,7 +127,7 @@ export default {
    },
     contentScroll(position){
       let value = -position.y
-      console.log('34324234234',value)
+      console.log('position',value)
       // if (value < this.imageOffsetTop[1]){
       //   this.$refs.detaiNavbar.currentIndex = 0
       // } else if (value >= this.imageOffsetTop[1] && value < this.imageOffsetTop[2]){
@@ -166,7 +169,7 @@ export default {
       //   console.log(res)
       // })
       this.addCart(product).then(res=>{
-        console.log(res);
+        console.log('message',res);
         
         // this.$toast.toastShow(res,2000)
         this.message = res,
@@ -175,6 +178,7 @@ export default {
           this.isShow=false;
           this.message=''
         },4000)
+        // toast弹窗一会消失
       })
     }
   },

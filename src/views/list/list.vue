@@ -1,148 +1,207 @@
 <template>
-  <div>
-    <h2>分类</h2>
-    <!-- <div class="wrapper"> -->
-      <div>
-    <!-- <img src="~assets/img/people/001.jpg" alt=""> -->
-    <!-- ul>li{列表数据$}*100 -->
-      <ul>
-        <li>列表数据1</li>
-        <li>列表数据2</li>
-        <li>列表数据3</li>
-        <li>列表数据4</li>
-        <li>列表数据5</li>
-        <li>列表数据6</li>
-        <li>列表数据7</li>
-        <li>列表数据8</li>
-        <li>列表数据9</li>
-        <li>列表数据10</li>
-        <li>列表数据11</li>
-        <li>列表数据12</li>
-        <li>列表数据13</li>
-        <li>列表数据14</li>
-        <li>列表数据15</li>
-        <li>列表数据16</li>
-        <li>列表数据17</li>
-        <li>列表数据18</li>
-        <li>列表数据19</li>
-        <li>列表数据20</li>
-        <li>列表数据21</li>
-        <li>列表数据22</li>
-        <li>列表数据23</li>
-        <li>列表数据24</li>
-        <li>列表数据25</li>
-        <li>列表数据26</li>
-        <li>列表数据27</li>
-        <li>列表数据28</li>
-        <li>列表数据29</li>
-        <li>列表数据30</li>
-        <li>列表数据31</li>
-        <li>列表数据32</li>
-        <li>列表数据33</li>
-        <li>列表数据34</li>
-        <li>列表数据35</li>
-        <li>列表数据36</li>
-        <li>列表数据37</li>
-        <li>列表数据38</li>
-        <li>列表数据39</li>
-        <li>列表数据40</li>
-        <li>列表数据41</li>
-        <li>列表数据42</li>
-        <li>列表数据43</li>
-        <li>列表数据44</li>
-        <li>列表数据45</li>
-        <li>列表数据46</li>
-        <li>列表数据47</li>
-        <li>列表数据48</li>
-        <li>列表数据49</li>
-        <li>列表数据50</li>
-        <li>列表数据51</li>
-        <li>列表数据52</li>
-        <li>列表数据53</li>
-        <li>列表数据54</li>
-        <li>列表数据55</li>
-        <li>列表数据56</li>
-        <li>列表数据57</li>
-        <li>列表数据58</li>
-        <li>列表数据59</li>
-        <li>列表数据60</li>
-        <li>列表数据61</li>
-        <li>列表数据62</li>
-        <li>列表数据63</li>
-        <li>列表数据64</li>
-        <li>列表数据65</li>
-        <li>列表数据66</li>
-        <li>列表数据67</li>
-        <li>列表数据68</li>
-        <li>列表数据69</li>
-        <li>列表数据70</li>
-        <li>列表数据71</li>
-        <li>列表数据72</li>
-        <li>列表数据73</li>
-        <li>列表数据74</li>
-        <li>列表数据75</li>
-        <li>列表数据76</li>
-        <li>列表数据77</li>
-        <li>列表数据78</li>
-        <li>列表数据79</li>
-        <li>列表数据80</li>
-        <li>列表数据81</li>
-        <li>列表数据82</li>
-        <li>列表数据83</li>
-        <li>列表数据84</li>
-        <li>列表数据85</li>
-        <li>列表数据86</li>
-        <li>列表数据87</li>
-        <li>列表数据88</li>
-        <li>列表数据89</li>
-        <li>列表数据90</li>
-        <li>列表数据91</li>
-        <li>列表数据92</li>
-        <li>列表数据93</li>
-        <li>列表数据94</li>
-        <li>列表数据95</li>
-        <li>列表数据96</li>
-        <li>列表数据97</li>
-        <li>列表数据98</li>
-        <li>列表数据99</li>
-        <li>列表数据100</li>
-      </ul>
+  <div id="list">
+    <NavBar class="homeNav">
+      <div slot="center">商品分类</div>
+    </NavBar>
+    <div class="content">
+      <tab-menu :categories="categories"
+                @selectItem="selectItem"></tab-menu>
+      <div class="content-right">
+        <tabController :title="['综合', '新品', '销量']" 
+            class="tabControl"  @titleChange="TitleC" 
+            ref="tabControl1" v-show="isShow"></tabController>
+        <scroll id="tab-content" ref="scroll"  :probe-type="3" @scroll="contentScroll">
+          <div>
+            <TabContentCategory :subcategories="showSubcategory" ></TabContentCategory>
+            <tabController :title="['综合', '新品', '销量']" 
+            class="tabControl2"  @titleChange="TitleC" 
+            ref="tabControl"></tabController>
+            <TabContentDetail :categoryDetail="showCategoryDetail"></TabContentDetail>
+          </div>
+        </scroll>
+        <backTop v-show="isShowBackTop" @click.native="backClick"></backTop>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import BScroll from 'better-scroll'
+import scroll from 'components/common/scroll/scroll'
+import NavBar from 'components/common/navbar/navBar'
+import TabMenu from './childComps/TabMenu'
+import TabContentCategory from './childComps/TabContentCategory'
+import TabContentDetail from './childComps/TabContentDetail'
+
+import tabController from 'components/content/tabController/tabController'
+import backTop from 'components/content/backTop/BackTop'
+
+// import {tabControlMixin} from "common/mixin";
+import {POP, SELL, NEW} from "common/const";
+import {getCategory, getSubcategory, getCategoryDetail} from 'network/category'
+
 export default {
   name:'list',
+  components:{
+    NavBar,
+    scroll,
+    TabMenu,
+    TabContentCategory,
+    tabController,
+    TabContentDetail,
+    backTop
+  },
+  // mixins: [tabControlMixin],
   data(){
     return{
-      scroll:null
+      categories: [],
+      categoryData: {
+      },
+      currentIndex: -1,
+      currentType:POP,
+      isShow:false,
+      tanOffsetTop:0,
+      isShowBackTop:true
+    }
+  },
+  computed:{
+    showSubcategory(){
+      if (this.currentIndex===-1) return{}
+      console.log('111111111',this.categoryData[this.currentIndex].subcategories);
+      return this.categoryData[this.currentIndex].subcategories
+    },
+    showCategoryDetail(){
+      if(this.currentIndex===-1)return[]
+      return this.categoryData[this.currentIndex].categoryDetail[this.currentType]
     }
   },
   mounted(){
-    // 组件创建后调用
-    // new BScroll(document.querySelector('.content'))
-    this.scroll=new BScroll('.wrapper',{
-      probeType:3,
-      pullUpLoad:true
-    })
-    this.scroll.on('scroll',(position)=>{
-      console.log('postion')
-    })
-    this.scroll.on('pullingUp',()=>{
-      console.log('上拉加载更多')
-      this.scroll.finishPullUp()   
-       })
+
+  },
+  created() {
+  // 1.请求分类数据
+  // 刚创建的时候调用请求数据的函数
+  this._getCategory()
+  },
+  methods:{
+    _getCategory(){
+      getCategory().then(res=>{
+        // 先获取分类数据
+        this.categories=res.data.category.list
+        // 初始化每个类别的子数据
+        for(let i=0; i<this.categories.length;i++){
+          this.categoryData[i]={
+            subcategories:{},
+            categoryDetail:{
+              'pop':[],
+              'new':[],
+              'sell':[]
+            }
+          }
+        }
+        // 请求第一个分类数据
+        this._getSubcategories(0)
+      })
+    },
+    _getSubcategories(index){
+      this.currentIndex=index;
+      const mailKey=this.categories[index].maitKey;
+      console.log('Obtian_mailKey',mailKey);
+      getSubcategory(mailKey).then(res=>{
+        this.categoryData[index].subcategories=res.data
+        this.categoryData = {...this.categoryData}
+        this._getCategoryDetail(POP)
+        this._getCategoryDetail(SELL)
+        this._getCategoryDetail(NEW)
+      })
+    },
+    _getCategoryDetail(type){
+      // 获取请求的miniWallKey
+      const miniWallkey=this.categories[this.currentIndex].miniWallKey
+      const a=123
+      console.log('a',a)
+      console.log('Obtian_currentIndex',this.categories[this.currentIndex])
+      console.log('Obtian_this.miniWallkey',this.categories[this.currentIndex].miniWallkey)
+      // console.log('Obtian_miniWallKey',miniWallkey)
+
+
+      // 发送请求，传入当前的miniWallKey和type
+      getCategoryDetail(this.categories[this.currentIndex].miniWallkey,type).then(res=>{
+        // 将获取到的数据保存下来
+        this.categoryData[this.currentIndex].categoryDetail[type]=res
+        this.categoryData={...this.categoryData}
+      })
+    },
+    selectItem(index){
+      // 通过点击这个事件来调取数据
+      this._getSubcategories(index)
+    },
+    TitleC(index){
+      switch(index){
+        case 0:
+          this.currentType=POP;
+          break
+        case 1:
+          this.currentType=NEW;
+          break
+        case 2:
+          this.currentType=SELL;
+          break
+      };
+      // this.$refs.tabControl.currentIndex = value
+    },
+    contentScroll(position){
+      if(position.y <-1000){
+        this.isShowBackTop = true
+      }else{
+        this.isShowBackTop = false
+      }
+      // 这里决定tabControl是否吸顶
+      this.isShow = (-position.y) > 1180
+          },
+    backClick(){
+      // 通过this.$refs.scroll去访问scroll组件,然后后面接的.scroll是这个组件对象中的数据scroll,scrollTo函数是回到顶部的函数 scrollTo(位置x，位置y，回到顶部时间(ms))
+      // this.$refs.scroll.scroll.scrollTo(0,0,500)
+      // 或者通过封装的思想,如下 
+      this.$refs.scroll.scrollTo(0,0,500)
+    },
+    // imgload(){
+    //   this.tanOffsetTop = this.$refs.tabControl.$el.offsetTop
+    //   console.log('tranOffsetTop',this.tanOffsetTop)
+    // }
   }
 }
 </script>
 
 <style>
-/* .wrapper{
-  height: 400px;
-  font-size: 20px;
-  background-color:yellow;
+#list{
+  /* padding-top: 44px; */
+  height: 100vh;
+  position: relative;
+}
+.homeNav{
+  background-color:var(--color-tint);
+  color: white;
+}
+.content{
   overflow: hidden;
-} */
+  position:absolute;
+  top: 44px;
+  bottom: 49px;
+  right: 0;
+  left: 0;
+  display: flex;
+}
+#tab-content{
+  height: 100%;
+  /* flex: 1; */
+}
+.tabControl{
+  position: relative;
+  /* top:44px; */
+  z-index: 9999;
+  /* flex: 1; */
+}
+.content-right{
+  flex: 1;
+}
 </style>

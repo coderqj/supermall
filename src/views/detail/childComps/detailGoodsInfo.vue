@@ -29,6 +29,7 @@ export default {
     }
   },
   methods:{
+    // 每一次加载完一张图片后counter计数器会加1，当计数器加到等于图片长度的时候，就会将图片加载完成的命令发射出去
     imgload(){
       // 等到所有图片都加载完毕后才会出发发射函数
       if(++this.counter===this.imageLength){

@@ -4,7 +4,8 @@
       <div class="info-header">
         <div class="header-title">用户评价</div>
         <div class="header-more">更多
-          <i class="arrow-right"></i>
+          <!-- <i class="arrow-right"></i> -->
+          <span></span>
         </div>
       </div>
       <div class="info-user">
@@ -70,6 +71,21 @@ export default {
     float: right;
     margin-right: 10px;
     font-size: 13px;
+    position: relative;
+    right: 20px;
+  }
+  .header-more span{
+    display: inline-block;
+    width: 13px;
+    height: 13px;
+    background-color: white;
+    position:absolute;
+    top: 17px;
+    margin-left: 5px;
+    border-top: 1px solid #333;
+    border-right: 1px solid #333;
+    transform:rotate(45deg);
+
   }
 
   .info-user {

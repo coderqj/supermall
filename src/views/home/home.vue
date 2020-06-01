@@ -3,19 +3,25 @@
     <NavBar class="homeNav">
       <div slot="center">购物街</div>
     </NavBar>
+    <!-- 这个tabController初始状态不会出现，只有v-show为true的时候才会出现，即出现吸顶 -->
      <tabController :title="['流行','新款','精选']" 
       class="tabControl"  @titleChange="TitleC" 
       ref="tabControl1" v-show="isTabShow"></tabController>
+      <!-- 在父组件中的子标签中监听该自定义事件并添加一个响应该事件TitleC的处理方法 -->
+      <!-- 当往下滑到到一定的程度显示 -->
+      <!-- ref 加在子组件上，用this.ref.name 获取到的是组件实例，可以使用组件的所有方法 -->
     <scroll class="content" ref="scroll" 
       :probe-type="3" :pull-up-load=true 
       @scroll="contentScroll" @pullingUp="loadMore">
+      <!-- 一旦滑动scroll组件就给父组件发送@scroll命令，传回position，再父组件中执行contentScroll函数 -->
+      <!-- 一旦上拉加载更新，scroll组件就给父组件发送@pullingUp组件，父组件接到命令后就去完成数据更新 -->
       <div>
         <homeSwiper :banners=banner @swiperImageLoad='swiperImageLoad'></homeSwiper>
         <homeRecommends :recommends=recommend></homeRecommends>
         <homeFeatureView/>
         <tabController :title="['流行','新款','精选']" 
         @titleChange="TitleC" ref="tabControl2"></tabController>
-        <!-- <ul><li>1</li><li>1</li><li>1</li><li>1</li><li>1</li><li>1</li><li>1</li><li>1</li><li>1</li><li>1</li><li>1</li><li>1</li><li>1</li><li>1</li><li>1</li><li>1</li><li>1</li><li>1</li><li>1</li><li>1</li><li>1</li><li>1</li><li>1</li><li>1</li><li>1</li><li>1</li><li>1</li><li>1</li><li>1</li><li>1</li><li>1</li><li>1</li><li>1</li><li>1</li><li>1</li><li>1</li><li>1</li><li>1</li><li>1</li><li>1</li></ul> -->
+        <!-- 当点击tabController中的元素，返回一个索引并赋值给currentTitle，此时GoodsList中的:goods的值会发生变化 -->
         <GoodsList :goods="goods[currentTitle].list">></GoodsList>
       </div>
     </scroll>
@@ -72,10 +78,12 @@ export default {
   // 该路由处于活跃的时候  
   activated(){
     this.$refs.scroll.scrollTo(0,this.saveY,0)
+    // 活跃的时候回到最开始离开的位置
     this.$refs.scroll.refresh()
   },
   // 该路由处于失活的时候(即当跳转出该路由的时候)
   deactivated(){
+    // 失活的时候保留最后离开的位置
     this.saveY = this.$refs.scroll.getScrollY()
     // 取消全局事件的监听，也就是说当这个路由失活的取消事件监听
     this.$bus.$off('itemImageLoad',this.itemImageListener)
@@ -97,8 +105,8 @@ export default {
     // this.$bus.$on('itemImageLoad',()=>{
     //   this.$refs.scroll.refresh()
     // })
-    // 对于refre刷新频繁，需要用到防抖函数，因为不使用防抖函数的话，上面的refres要执行30次对服务器请求压力过大
-      // 通过debounce防抖函数可以将refresh函数传入到debounce中，生成一个新的函数,之后在调用非常频繁的时候，就是用新生成的函数，如果下一次执行来的非常快就会取消钓上一次
+    // 对于refre刷新频繁，需要用到防抖函数，因为不使用防抖函数的话，上面的refresh要执行30次对服务器请求压力过大
+      // 通过debounce防抖函数可以将refresh函数传入到debounce中，生成一个新的函数,之后在调用非常频繁的时候，就是用新生成的函数，如果下一次执行来的非常快就会取消掉上一次
       // const refresh = debounce(this.$refs.scroll.refresh,500)
       // this.itemImageListener = ()=>{
       //   refresh()

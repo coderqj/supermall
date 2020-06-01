@@ -1,10 +1,13 @@
 <template>
     <div id="hy-swiper">
+      <!-- @touchstart触摸开始触发函数touchStart；@touchmove触摸移动触发函数touchmove； @touchend触摸移动触发函数touchEnd -->
       <div class="swiper" @touchstart="touchStart" @touchmove="touchMove" @touchend="touchEnd">
         <slot></slot>
+        <!-- 这里面放入要轮播的东西 -->
       </div>
       <slot name="indicator">
       </slot>
+      <!-- indicator插槽用来自定义指示器的样式，因为在实际使用过程中指示器样式很可能是需要定制的。 -->
       <div class="indicator">
         <slot name="indicator" v-if="showIndicator && slideCount>1">
           <div v-for="(item, index) in slideCount" class="indi-item" :class="{active: index === currentIndex-1}" :key="index"></div>
@@ -14,6 +17,7 @@
 </template>
 
 <script>
+// 父组件中负责通用的功能，以及轮播的整体架构
 	export default {
 		name: "Swiper",
     props: {
@@ -57,11 +61,13 @@
        * 定时器操作
        */
       startTimer: function () {
+        // setInterval() 方法可按照指定的周期（以毫秒计）来不停调用函数或计算表达式。
 		    this.playTimer = window.setInterval(() => {
 		      this.currentIndex++;
 		      this.scrollContent(-this.currentIndex * this.totalWidth);
         }, this.interval)
       },
+      // 由于轮播图是自动的，所以每个interval个时间，轮播图的索引index自动会加1
       stopTimer: function () {
         window.clearInterval(this.playTimer);
       },
@@ -120,18 +126,26 @@
         // 1.获取要操作的元素
         // 将swiperItem作为插槽插进去，这一步是获取插槽中有多少元素、
         let swiperEl = document.querySelector('.swiper');
+        // 获取到class=swiper的元素
         let slidesEls = swiperEl.getElementsByClassName('slide');
-
+        // 获取到class=swiper元素中，类名为slide的元素
+        // 因为class=swiper中放入的是插槽，所以具体放入的个数视情况而定，看插槽里面放了多少个
         // 2.保存个数
         this.slideCount = slidesEls.length;
 
         // 3.如果大于1个, 那么在前后分别添加一个slide
         if (this.slideCount > 1) {
+          // 克隆slideEls[0]这个节点给cloneFirst
           let cloneFirst = slidesEls[0].cloneNode(true);
+          // cloneNode(true)如果为true，则克隆oldNode 这个及其子节点，否则只可能这个节点本身
           let cloneLast = slidesEls[this.slideCount - 1].cloneNode(true);
+          // 克隆slideEls[最后]这个节点给cloneLast
           swiperEl.insertBefore(cloneLast, slidesEls[0]);
+          // 在slidesEls[0]节点之前插入cloneLast”
           swiperEl.appendChild(cloneFirst);
+          //在后面最后一个节点后面添加cloneFirst这个节点
           this.totalWidth = swiperEl.offsetWidth;
+          // totalWidth就是轮播图一张图片的大小
           this.swiperStyle = swiperEl.style;
         }
 

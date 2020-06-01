@@ -26,6 +26,8 @@ export default {
   },
   computed:{
     isactive(){
+      // 判断当前活跃路由与通过父子组件传进来的path值一样不一样
+      // 如果一样，就给isactive赋true
       return this.$route.path.indexOf(this.path) !==-1
     },
     activrStyle(){
@@ -35,7 +37,11 @@ export default {
   methods:{
     viewButton(){
       this.$router.push(this.path)
-      console.log('111', this.isactive)
+      console.log('22222')
+      console.log('this.isactive', this.isactive)
+      console.log('this.activrStyle', this.activrStyle)
+      console.log('this.$route.path', this.$route.path)
+      console.log('this.path', this.path)
     }
   }
 }
