@@ -2,7 +2,7 @@ import {request} from './request'
  
 export function getCategory() {
     return request({
-    url:'/category'
+     url:'/category'
   })
 }
 // 导入的request+方法中的url+params中的范型

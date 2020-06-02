@@ -79,7 +79,7 @@ export default {
   activated(){
     this.$refs.scroll.scrollTo(0,this.saveY,0)
     // 活跃的时候回到最开始离开的位置
-    this.$refs.scroll.refresh()
+    // this.$refs.scroll.refresh()
   },
   // 该路由处于失活的时候(即当跳转出该路由的时候)
   deactivated(){

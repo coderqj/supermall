@@ -25,21 +25,34 @@
           </div>
       </div>
     </section>
+    <!-- 封装成一个整体 -->
+    <ListView :listData="orderList" class="order-list"></ListView>
+    <ListView :listData="serviceList" class="service-list"></ListView>
   </div>
 </template>
 
 <script>
 import NavBar from 'components/common/navbar/navBar'
 import UserInfo from './childComps/UserInfo'
+import ListView from './childComps/ListView'
 export default {
   name:"Profile",
   components:{
     NavBar,
-    UserInfo
+    UserInfo,
+    ListView
   },
   data(){
     return{
-
+        orderList:[
+          {icon:'#order',iconColor:'#ff8198',info:'我的消息'},
+          {icon:'#point',iconColor:'#fc7b53',info:'积分商城'},
+          {icon:'#vip',iconColor:'#ffc636',info:'会员卡'},
+        ],
+        serviceList:[
+          {icon:'#service',iconColor:'#ff8198',info:'我的购物车'},
+          {icon: '#download',iconColor:'#ff8198',info:'下载购物车APP'},
+        ]
     }
   }
 }
@@ -76,6 +89,9 @@ export default {
     color: #ff5f3e;
   }
    .account-info {
+    margin-top: 6px;
+  }
+  .order-list, .service-list{
     margin-top: 6px;
   }
 </style>
